@@ -1,0 +1,141 @@
+{
+  "scenarios": [
+    {
+      "name": "1. Sample network (8 routers, all links up)",
+      "description": "Same topology as data/sample_network.json. Healthy network: R1 -> R8 should cost 13 via R3, R5, R6, R7.",
+      "default_source": "R1",
+      "default_destination": "R8",
+      "routers": [
+        {"id": "R1", "x": 0.0, "y": 1.0},
+        {"id": "R2", "x": 1.2, "y": 2.0},
+        {"id": "R3", "x": 1.2, "y": 0.0},
+        {"id": "R4", "x": 2.6, "y": 2.0},
+        {"id": "R5", "x": 2.6, "y": 0.0},
+        {"id": "R6", "x": 4.0, "y": 1.4},
+        {"id": "R7", "x": 5.2, "y": 0.2},
+        {"id": "R8", "x": 6.2, "y": 1.4}
+      ],
+      "links": [
+        {"source": "R1", "target": "R2", "cost": 10},
+        {"source": "R1", "target": "R3", "cost": 5},
+        {"source": "R2", "target": "R3", "cost": 2},
+        {"source": "R2", "target": "R4", "cost": 1},
+        {"source": "R3", "target": "R4", "cost": 9},
+        {"source": "R3", "target": "R5", "cost": 2},
+        {"source": "R4", "target": "R6", "cost": 4},
+        {"source": "R5", "target": "R6", "cost": 3},
+        {"source": "R5", "target": "R7", "cost": 7},
+        {"source": "R6", "target": "R7", "cost": 2},
+        {"source": "R6", "target": "R8", "cost": 6},
+        {"source": "R7", "target": "R8", "cost": 1}
+      ]
+    },
+    {
+      "name": "2. Link failure demo (R5-R6 down)",
+      "description": "Same network, but link R5-R6 has failed. Traffic R1 -> R8 must detour (cost rises from 13 to 15).",
+      "default_source": "R1",
+      "default_destination": "R8",
+      "routers": [
+        {"id": "R1", "x": 0.0, "y": 1.0},
+        {"id": "R2", "x": 1.2, "y": 2.0},
+        {"id": "R3", "x": 1.2, "y": 0.0},
+        {"id": "R4", "x": 2.6, "y": 2.0},
+        {"id": "R5", "x": 2.6, "y": 0.0},
+        {"id": "R6", "x": 4.0, "y": 1.4},
+        {"id": "R7", "x": 5.2, "y": 0.2},
+        {"id": "R8", "x": 6.2, "y": 1.4}
+      ],
+      "links": [
+        {"source": "R1", "target": "R2", "cost": 10},
+        {"source": "R1", "target": "R3", "cost": 5},
+        {"source": "R2", "target": "R3", "cost": 2},
+        {"source": "R2", "target": "R4", "cost": 1},
+        {"source": "R3", "target": "R4", "cost": 9},
+        {"source": "R3", "target": "R5", "cost": 2},
+        {"source": "R4", "target": "R6", "cost": 4},
+        {"source": "R5", "target": "R6", "cost": 3, "failed": true},
+        {"source": "R5", "target": "R7", "cost": 7},
+        {"source": "R6", "target": "R7", "cost": 2},
+        {"source": "R6", "target": "R8", "cost": 6},
+        {"source": "R7", "target": "R8", "cost": 1}
+      ]
+    },
+    {
+      "name": "3. Router failure demo (R6 down)",
+      "description": "Router R6 has failed, so every link touching R6 is unusable. R1 -> R8 detours through R5 and R7.",
+      "default_source": "R1",
+      "default_destination": "R8",
+      "failed_routers": ["R6"],
+      "routers": [
+        {"id": "R1", "x": 0.0, "y": 1.0},
+        {"id": "R2", "x": 1.2, "y": 2.0},
+        {"id": "R3", "x": 1.2, "y": 0.0},
+        {"id": "R4", "x": 2.6, "y": 2.0},
+        {"id": "R5", "x": 2.6, "y": 0.0},
+        {"id": "R6", "x": 4.0, "y": 1.4},
+        {"id": "R7", "x": 5.2, "y": 0.2},
+        {"id": "R8", "x": 6.2, "y": 1.4}
+      ],
+      "links": [
+        {"source": "R1", "target": "R2", "cost": 10},
+        {"source": "R1", "target": "R3", "cost": 5},
+        {"source": "R2", "target": "R3", "cost": 2},
+        {"source": "R2", "target": "R4", "cost": 1},
+        {"source": "R3", "target": "R4", "cost": 9},
+        {"source": "R3", "target": "R5", "cost": 2},
+        {"source": "R4", "target": "R6", "cost": 4},
+        {"source": "R5", "target": "R6", "cost": 3},
+        {"source": "R5", "target": "R7", "cost": 7},
+        {"source": "R6", "target": "R7", "cost": 2},
+        {"source": "R6", "target": "R8", "cost": 6},
+        {"source": "R7", "target": "R8", "cost": 1}
+      ]
+    },
+    {
+      "name": "4. Unreachable demo (network partition)",
+      "description": "The only bridge between the two clusters (R3-R4) has failed, so R1 -> R6 is unreachable. Un-fail the link in the sidebar to restore the route.",
+      "default_source": "R1",
+      "default_destination": "R6",
+      "routers": [
+        {"id": "R1", "x": 0.0, "y": 1.0},
+        {"id": "R2", "x": 1.5, "y": 2.0},
+        {"id": "R3", "x": 1.5, "y": 0.0},
+        {"id": "R4", "x": 4.5, "y": 0.0},
+        {"id": "R5", "x": 4.5, "y": 2.0},
+        {"id": "R6", "x": 6.0, "y": 1.0}
+      ],
+      "links": [
+        {"source": "R1", "target": "R2", "cost": 4},
+        {"source": "R1", "target": "R3", "cost": 2},
+        {"source": "R2", "target": "R3", "cost": 1},
+        {"source": "R3", "target": "R4", "cost": 5, "failed": true},
+        {"source": "R4", "target": "R5", "cost": 3},
+        {"source": "R4", "target": "R6", "cost": 2},
+        {"source": "R5", "target": "R6", "cost": 1}
+      ]
+    },
+    {
+      "name": "5. Bellman-Ford multi-round demo (ring)",
+      "description": "The cheapest route R1 -> R2 goes the long way round the ring (cost 10, not the direct 20). Bellman-Ford needs several iterations because the update has to travel one hop per pass.",
+      "default_source": "R1",
+      "default_destination": "R2",
+      "routers": [
+        {"id": "R1", "x": 0.0, "y": 2.0},
+        {"id": "R2", "x": 1.7, "y": 1.0},
+        {"id": "R3", "x": 1.7, "y": -1.0},
+        {"id": "R4", "x": 0.0, "y": -2.0},
+        {"id": "R5", "x": -1.7, "y": -1.0},
+        {"id": "R6", "x": -1.7, "y": 1.0}
+      ],
+      "links": [
+        {"source": "R1", "target": "R6", "cost": 2},
+        {"source": "R6", "target": "R5", "cost": 2},
+        {"source": "R5", "target": "R4", "cost": 2},
+        {"source": "R4", "target": "R3", "cost": 2},
+        {"source": "R3", "target": "R2", "cost": 2},
+        {"source": "R1", "target": "R2", "cost": 20},
+        {"source": "R1", "target": "R3", "cost": 15}
+      ]
+    }
+  ]
+}
