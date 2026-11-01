@@ -1,0 +1,82 @@
+{
+  "test_cases": [
+    {
+      "id": "TC01",
+      "name": "Standard Connected Graph",
+      "type": "connected",
+      "nodes": ["A", "B", "C", "D", "E"],
+      "edges": [
+        {"u": "A", "v": "B", "weight": 4},
+        {"u": "A", "v": "C", "weight": 2},
+        {"u": "B", "v": "C", "weight": 1},
+        {"u": "B", "v": "D", "weight": 5},
+        {"u": "C", "v": "D", "weight": 8},
+        {"u": "C", "v": "E", "weight": 10},
+        {"u": "D", "v": "E", "weight": 2}
+      ],
+      "source": "A",
+      "expected_costs": {"A": 0, "B": 3, "C": 2, "D": 8, "E": 10},
+      "expected_paths": {
+        "A": ["A"],
+        "B": ["A", "C", "B"],
+        "C": ["A", "C"],
+        "D": ["A", "C", "B", "D"],
+        "E": ["A", "C", "B", "D", "E"]
+      }
+    },
+    {
+      "id": "TC02",
+      "name": "Equal-Cost Paths Graph",
+      "type": "equal_cost",
+      "nodes": ["S", "A", "B", "D"],
+      "edges": [
+        {"u": "S", "v": "A", "weight": 3},
+        {"u": "S", "v": "B", "weight": 3},
+        {"u": "A", "v": "D", "weight": 2},
+        {"u": "B", "v": "D", "weight": 2}
+      ],
+      "source": "S",
+      "expected_costs": {"S": 0, "A": 3, "B": 3, "D": 5},
+      "expected_paths": {
+        "S": ["S"],
+        "A": ["S", "A"],
+        "B": ["S", "B"],
+        "D": ["S", "A", "D"]
+      }
+    },
+    {
+      "id": "TC03",
+      "name": "Disconnected Graph Scenario",
+      "type": "disconnected",
+      "nodes": ["N1", "N2", "N3", "ISOLATED"],
+      "edges": [
+        {"u": "N1", "v": "N2", "weight": 2},
+        {"u": "N2", "v": "N3", "weight": 4}
+      ],
+      "source": "N1",
+      "expected_costs": {"N1": 0, "N2": 2, "N3": 6, "ISOLATED": null},
+      "expected_paths": {
+        "N1": ["N1"],
+        "N2": ["N1", "N2"],
+        "N3": ["N1", "N2", "N3"],
+        "ISOLATED": []
+      }
+    },
+    {
+      "id": "TC04",
+      "name": "Failed-Link Scenario",
+      "type": "failed_link",
+      "nodes": ["X", "Y", "Z"],
+      "edges": [
+        {"u": "X", "v": "Y", "weight": 1}
+      ],
+      "source": "X",
+      "expected_costs": {"X": 0, "Y": 1, "Z": null},
+      "expected_paths": {
+        "X": ["X"],
+        "Y": ["X", "Y"],
+        "Z": []
+      }
+    }
+  ]
+}
